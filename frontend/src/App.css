@@ -1,0 +1,19 @@
+/* Hide Scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  transform: scale(0.6);
+  transform-origin: center;
+ 
+  background: gainsboro !important;
+  border-radius: 50% !important;
+  color: gray !important;
+}
+
