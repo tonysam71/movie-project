@@ -1,4 +1,4 @@
-/* Hide Scrollbar */
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -6,14 +6,20 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+.swiper-button-prev svg{
+  width: 50% !important;
+}
+.swiper-button-next svg{
+  width: 50% !important;
+}
 
 .swiper-button-next,
 .swiper-button-prev {
   transform: scale(0.6);
   transform-origin: center;
  
-  background: gainsboro !important;
+  background: transparent !important;
   border-radius: 50% !important;
-  color: gray !important;
+  color: rgba(0, 0, 0, 0.725) !important
 }
 

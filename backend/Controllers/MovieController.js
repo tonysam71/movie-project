@@ -1,6 +1,5 @@
 const Movie = require("../Models/MovieModel");
 
-
 let createMovie = async (req, res) => {
   try {
     if (!req.file) {
@@ -43,11 +42,10 @@ let createMovie = async (req, res) => {
   }
 };
 
-
 let getMovies = async (req, res) => {
   try {
     const { category } = req.query;
-    const today = new Date(); 
+    const today = new Date();
 
     let filter = {};
 
@@ -74,13 +72,14 @@ let getMovie = async (req, res) => {
   try {
     let { name } = req.params;
 
-
     let decodedName = decodeURIComponent(name);
 
     let movie = await Movie.findOne({ name: decodedName });
 
     if (!movie) {
-      return res.status(404).json({ success: false, message: "Movie not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Movie not found" });
     }
 
     res.status(200).json({ success: true, message: "found", data: movie });
@@ -88,7 +87,6 @@ let getMovie = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
-
 
 let updateMovie = async (req, res) => {
   try {
@@ -104,7 +102,6 @@ let updateMovie = async (req, res) => {
       };
     }
 
-    
     if (updateData.releaseDate) {
       const releaseDate = new Date(updateData.releaseDate);
       const today = new Date();
@@ -130,7 +127,6 @@ let updateMovie = async (req, res) => {
   }
 };
 
-
 let deleteMovie = async (req, res) => {
   try {
     const { id } = req.params;
@@ -150,7 +146,4 @@ let deleteMovie = async (req, res) => {
   }
 };
 
-
-
-module.exports = {createMovie,getMovies,getMovie, updateMovie, deleteMovie,};
-
+module.exports = { createMovie, getMovies, getMovie, updateMovie, deleteMovie };

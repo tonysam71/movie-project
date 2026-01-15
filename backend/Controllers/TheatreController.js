@@ -3,7 +3,7 @@ let Theatre = require("../Models/theatreModel");
 let createTheatre = async (req, res) => {
     try {
         let newtheatre = await Theatre({ ...req.body });
-        console.log("REQ BODY 👉", req.body);
+        
 
         await newtheatre.save();
         res.json({ success: true, message: "theatre Created Successfully", data: newtheatre })

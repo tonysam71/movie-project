@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Moviesmodel({ show, onClose }) {
   const [animate, setAnimate] = useState(false);
@@ -8,7 +9,7 @@ export default function Moviesmodel({ show, onClose }) {
   const getdata = async () => {
     try {
       const res = await fetch(
-        "http://localhost:4000/api/movie/getmovies"
+        "http://localhost:4000/api/movie/getmovies?category=now"
       );
       const data = await res.json();
 
@@ -64,6 +65,7 @@ export default function Moviesmodel({ show, onClose }) {
           )}
 
           {movies.map((movie) => (
+<Link key={movie._id} to={`/movie/${encodeURIComponent(movie.name)}`}>
             <div
               key={movie._id}
               className="flex items-center gap-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition"
@@ -73,6 +75,7 @@ export default function Moviesmodel({ show, onClose }) {
                 alt={movie.name}
                 className="w-14 h-14 rounded-lg object-cover"
               />
+              
 
               <div>
                 <h3 className="font-semibold text-sm">
@@ -84,6 +87,7 @@ export default function Moviesmodel({ show, onClose }) {
                 </p>
               </div>
             </div>
+          </Link>
           ))}
         </div>
       </div>
