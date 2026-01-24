@@ -146,4 +146,41 @@ let deleteMovie = async (req, res) => {
   }
 };
 
-module.exports = { createMovie, getMovies, getMovie, updateMovie, deleteMovie };
+let FilterMovie = async (req, res) => {
+  try {
+    let { key, value } = req.params;
+
+    let valuesArray = value.split(",");
+
+    let movies = await Movie.find({
+      [key]: { $in: valuesArray },
+    });
+
+    if (movies.length === 0) {
+      return res.json({
+        success: false,
+        message: "No movies found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Movies found",
+      data: movies,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {
+  createMovie,
+  getMovies,
+  getMovie,
+  updateMovie,
+  deleteMovie,
+  FilterMovie,
+};

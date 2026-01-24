@@ -5,6 +5,7 @@ const {
   getMovie,
   updateMovie,
   deleteMovie,
+  FilterMovie,
 } = require("../Controllers/MovieController");
 const upload = require("../Middleware/Upload");
 
@@ -18,5 +19,6 @@ router.get("/getmovie/:name", getMovie);
 router.put("/updatemovie/:id", upload.single("poster"), updateMovie);
 
 router.delete("/deletemovie/:id", deleteMovie);
+router.get("/filtermovie/:key/:value", FilterMovie)
 
 module.exports = router;

@@ -65,7 +65,7 @@ export default function Moviesmodel({ show, onClose }) {
           )}
 
           {movies.map((movie) => (
-<Link key={movie._id} to={`/movie/${encodeURIComponent(movie.name)}`}>
+<Link onClick={onClose} key={movie._id} to={`/movie/${encodeURIComponent(movie.name)}`}>
             <div
               key={movie._id}
               className="flex items-center gap-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition"

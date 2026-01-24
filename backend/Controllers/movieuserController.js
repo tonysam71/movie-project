@@ -141,15 +141,19 @@ let login = async (req, res) => {
     }
 }
 let profile = (req, res) => {
-    try {
-        if (!req.user) {
-            return res.status(500).json({ success: false, message: "not found" })
-        }
-        res.send({ data: req.user })
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message })
-    }
-}
+  try {
+    res.status(200).json({
+      success: true,
+      data: req.user
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 
 let deleteuser = async (req, re) => {
     try {
@@ -161,9 +165,5 @@ let deleteuser = async (req, re) => {
         res.status(500).json({ success: false, message: error.message })
     }
 }
-module.exports = { register, resendOtp, verifyOtp, login, profile }
+module.exports = { register, resendOtp, verifyOtp, login, profile,deleteuser }
 
-
-// ORM (Object-Relational Mapping) and ODM (Object-Document Mapping) are techniques that bridge the gap between object-oriented programming languages and databases, allowing developers to interact with data using code objects instead of writing raw queries. The key difference lies in the type of database they are designed for.
-// ORM is used for relational databases (SQL databases) like MySQL, PostgreSQL, and SQLite.
-// ODM is used for NoSQL document databases like MongoDB and CouchDB. 

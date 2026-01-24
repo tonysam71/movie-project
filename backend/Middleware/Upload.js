@@ -1,31 +1,18 @@
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const multer = require("multer")
+const path = require("path")
+let uploadpath = path.join(__dirname, "../uploads")
 
-// Upload folder
-const uploadPath = path.join(__dirname, "../Uploads");
-if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath);
-
-// Multer storage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, uploadPath);
+        cb(null, uploadpath)
     },
     filename: function (req, file, cb) {
-        const ext = path.extname(file.originalname);
-        cb(null, Date.now() + ext);
+        console.log("insideupload", file)
+        cb(null, Date.now() + file.originalname)
     }
-});
+})
 
-// File filter (images only)
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith("image/")) {
-        cb(null, true);
-    } else {
-        cb(new Error("Only image files are allowed!"), false);
-    }
-};
-
-const upload = multer({ storage, fileFilter });
-
+const upload = multer({ storage: storage });
 module.exports = upload;
+// req.files
+// req.body

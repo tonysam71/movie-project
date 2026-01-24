@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function TheatresModal({ show, onClose }) {
   const [animate, setAnimate] = useState(false);
   const [theatres, setTheatres] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (show) {
@@ -19,35 +21,31 @@ export default function TheatresModal({ show, onClose }) {
         "http://localhost:4000/api/theatre/gettheatres"
       );
       const result = await res.json();
-
-      
       setTheatres(result.data || []);
     } catch (error) {
-      
       setTheatres([]);
     }
   };
+
+  const openTheatrePage = (theatreId) => {
+  console.log("CLICKED THEATRE ID:", theatreId);
+  onClose();
+  navigate(`/theatre/${theatreId}`);
+};
+
 
   if (!show) return null;
 
   return (
     <div
       onClick={onClose}
-      className={`
-        fixed inset-0 bg-black/40
-        flex items-start justify-center
-        z-50 transition duration-300
-        ${animate ? "opacity-100" : "opacity-0"}
-      `}
+      className={`fixed inset-0 bg-black/40 flex items-start justify-center z-50
+      ${animate ? "opacity-100" : "opacity-0"}`}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`
-          bg-white w-[900px] mt-24
-          rounded-xl p-8
-          transition duration-500
-          ${animate ? "scale-100 opacity-100" : "scale-95 opacity-0"}
-        `}
+        className={`bg-white w-[900px] mt-24 rounded-xl p-8
+        ${animate ? "scale-100" : "scale-95"}`}
       >
         <h2 className="text-xl font-semibold mb-6">
           Theatres in Indore
@@ -58,16 +56,14 @@ export default function TheatresModal({ show, onClose }) {
             theatres.map((theatre) => (
               <div
                 key={theatre._id}
-                className="py-3 border-b text-gray-700 hover:text-red-600 cursor-pointer transition"
+                onClick={() => openTheatrePage(theatre._id)}
+                className="py-3 border-b cursor-pointer hover:text-red-600"
               >
-                {theatre.name && <span>{theatre.name}</span>}
-                {theatre.name && theatre.location && <span>, </span>}
-                {theatre.location && <span>{theatre.location}, </span>}
-                {theatre.city && <span>{theatre.city}</span>}
+                <b>{theatre.name}</b>, {theatre.location}, {theatre.city}
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No theatres found</p>
+            <p>No theatres found</p>
           )}
         </div>
       </div>

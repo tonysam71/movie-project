@@ -36,54 +36,48 @@ const nowShowing = [
 ];
 
 export default function MovieDetails() {
-    const { name } = useParams(); 
-  const [movie, setMovie] = useState(null); 
-  const [loading, setLoading] = useState(true);
-  const [theatres, setTheatres] = useState([]);
-  const [open, setOpen] = useState(false);
+  const { name } = useParams();
 
-   const getMovie = async () => {
+  const [movie, setMovie] = useState(null);
+  const [shows, setShows] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+
+ 
+  const getMovie = async () => {
     try {
-     
       const res = await fetch(
         `http://localhost:4000/api/movie/getmovie/${encodeURIComponent(name)}`
       );
       const data = await res.json();
 
       if (data.success) {
-        setMovie(data.data); 
+        setMovie(data.data);
+        fetchShows(data.data._id);
       } else {
-        setMovie(false); 
+        setMovie(false);
       }
     } catch (error) {
-      console.log(error);
       setMovie(false);
-    } finally {
-      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    getMovie();
-    window.scrollTo(0, 0); 
-  }, [name]);
 
-  
-
-  const fetchTheatres = async () => {
+  const fetchShows = async (movieId) => {
     try {
-      const res = await fetch("http://localhost:4000/api/theatre/gettheatres");
+      const res = await fetch(
+        `http://localhost:4000/api/showmovie/getshow/${movieId}`
+      );
       const data = await res.json();
-
-      setTheatres(data.data || []);
+      console.log(data);
+      setShows(data.data || []);
     } catch (error) {
-      setTheatres([]);
+      setShows([]);
     }
   };
 
   useEffect(() => {
     getMovie();
-    fetchTheatres();
     window.scrollTo(0, 0);
   }, [name]);
 
@@ -97,9 +91,25 @@ export default function MovieDetails() {
     );
   }
 
+
+  const groupedShows = shows.reduce((acc, show) => {
+    const theatreId = show.theatre._id;
+
+    if (!acc[theatreId]) {
+      acc[theatreId] = {
+        theatre: show.theatre,
+        shows: [],
+      };
+    }
+
+    acc[theatreId].shows.push(show);
+    return acc;
+  }, {});
+
   return (
     <>
-      <div className="w-[90%]  mt-[100px] mx-auto p-1 ">
+    
+      <div className="w-[90%] mt-[100px] mx-auto">
         <div className="flex gap-9 mb-14">
           <img
             src={movie.poster?.url}
@@ -127,7 +137,9 @@ export default function MovieDetails() {
                 onClose={() => setOpen(false)}
               />
             )}
+
             <br />
+
             <button className="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg text-lg hover:bg-red-700">
               Book Tickets
             </button>
@@ -135,27 +147,19 @@ export default function MovieDetails() {
         </div>
       </div>
 
+     
       <div className="px-4 md:px-10 lg:px-20">
-        <div className="flex items-center gap-3 mb-4">
-          <button className="border px-4 py-2 rounded">Filters</button>
-          <button className="border px-4 py-2 rounded">3D</button>
-          <button className="border px-4 py-2 rounded">After 5 PM</button>
-          <button className="border px-4 py-2 rounded">Premium Seats</button>
-        </div>
-
         <div className="bg-gray-100 px-4 py-2 text-sm flex gap-6 mb-6">
           <span>⚫ Available</span>
           <span className="text-yellow-500">🟡 Filling fast</span>
           <span className="text-orange-500">🟠 Almost full</span>
         </div>
 
-        {theatres.length === 0 && (
-          <p className="text-center text-gray-500 py-10">
-            No theatres available
-          </p>
+        {Object.keys(groupedShows).length === 0 && (
+          <p className="text-center text-gray-500 py-10">No shows available</p>
         )}
 
-        {theatres.map((theatre) => (
+        {Object.values(groupedShows).map(({ theatre, shows }) => (
           <div
             key={theatre._id}
             className="border-b py-6 flex justify-between items-start"
@@ -163,7 +167,6 @@ export default function MovieDetails() {
             <div className="flex gap-4">
               <img
                 src={theatre.logo || "/vite.svg"}
-                alt=""
                 className="w-12 h-12 rounded-full border"
               />
 
@@ -174,27 +177,87 @@ export default function MovieDetails() {
 
                 <p className="text-gray-500 text-sm">| Non-cancellable</p>
 
-                <div className="flex gap-4 mt-4 flex-wrap">
-                  {(theatre.shows || []).map((show, i) => (
-                    <button
-                      key={i}
-                      className="border rounded-lg px-6 py-3 hover:border-green-500"
-                    >
-                      <p className="font-semibold">{show.time}</p>
-                      <p className="text-xs text-gray-500">{show.format}</p>
-                      <p className="text-xs text-gray-400">{show.type}</p>
-                    </button>
-                  ))}
+               
+                <div className="flex gap-3 mt-4 flex-wrap">
+                  {shows.map((show) =>
+                    show.showDates.map((d, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setSelectedDate(d.date)}
+                        className={`px-4 py-2 border rounded-lg text-sm
+          ${
+            selectedDate === d.date
+              ? "bg-green-600 text-white border-green-600"
+              : "hover:border-green-500"
+          }`}
+                      >
+                        {new Date(d.date).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "short",
+                        })}
+                      </button>
+                    ))
+                  )}
                 </div>
+
+                {selectedDate && (
+                  <div className="flex gap-4 mt-4 flex-wrap">
+                    {shows.map((show) =>
+                      show.showTimings.map((t, i) => (
+                        <button
+                          key={i}
+                          className="relative group border rounded-lg px-6 py-3 hover:border-green-500"
+                        >
+                          <p className="font-semibold">
+                            {new Date(t.time).toLocaleTimeString("en-IN", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </p>
+
+                          {/* Hover Popup */}
+                          <div
+                            className="absolute hidden group-hover:block
+          top-[-130px] left-1/2 -translate-x-1/2
+          bg-white rounded-xl shadow-xl p-4 z-50 min-w-[200px]"
+                          >
+                            {t.seatCategories.map((seat, idx) => (
+                              <div
+                                key={idx}
+                                className="flex justify-between mb-2"
+                              >
+                                <div>
+                                  <p className="text-sm">{seat.categoryName}</p>
+                                  <p className="text-xs text-green-600">
+                                    AVAILABLE
+                                  </p>
+                                </div>
+                                <p className="font-semibold">₹{seat.price}</p>
+                              </div>
+                            ))}
+
+                            <div
+                              className="absolute -bottom-2 left-1/2 -translate-x-1/2
+            w-3 h-3 bg-white rotate-45"
+                            ></div>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
             <div className="text-xl cursor-pointer">🤍</div>
           </div>
         ))}
+
+       
         <h2 className="text-xl font-semibold mt-10 mb-4">
           Explore Latest Movies in Indore by Language
         </h2>
+
         <div className="flex gap-3 flex-wrap mb-10">
           {languages.map((lang, i) => (
             <span
@@ -209,6 +272,7 @@ export default function MovieDetails() {
         <h2 className="text-xl font-semibold mb-4">
           Explore Latest Movies in Indore by Genre
         </h2>
+
         <div className="flex gap-3 flex-wrap mb-10">
           {genres.map((genre, i) => (
             <span
@@ -221,6 +285,7 @@ export default function MovieDetails() {
         </div>
 
         <h2 className="text-xl font-semibold mb-4">Now Showing in Indore</h2>
+
         <div className="flex gap-3 flex-wrap">
           {nowShowing.map((movie, i) => (
             <span

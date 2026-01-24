@@ -22,10 +22,12 @@ app.use("/uploads", express.static(path.join(__dirname, "Uploads")));
 const movieUserRoute = require("./Routes/movieuserRoute");
 const movieRoute = require("./Routes/MovieRoute");
 const theatreRoute = require("./Routes/TheatreRoute");
+const showRoute = require("./Routes/showRoute")
 
 app.use("/api/user", movieUserRoute);
 app.use("/api/movie", movieRoute); 
 app.use("/api/theatre", theatreRoute);
+app.use("/api/showmovie", showRoute)
 
 
 connectDB();

@@ -9,4 +9,3 @@ router.get("/profile", auth, profile);
 
 module.exports = router
 
-// otp , passhash ,passcompare
