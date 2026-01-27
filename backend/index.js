@@ -1,5 +1,5 @@
-require("dotenv").config();
 const express = require("express");
+require("dotenv").config();
 const connectDB = require("./Configs/db");
 const path = require("path");
 const cors = require("cors");
@@ -40,8 +40,12 @@ app.get("*",(req,res)=>{
   res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"))
 });
 
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
 
- 
-app.listen(4000, (err) => {
-  console.log( err||"Server running on port 4000");
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
