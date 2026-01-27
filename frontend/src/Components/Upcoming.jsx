@@ -30,7 +30,7 @@ export default function Upcoming() {
   console.log("upcomming",movies)
 
   return (
-  <div className="max-w-7xl mx-auto px-4 py-10 ml-5">
+  <div className="max-w-7xl mx-auto px-4 py-10 ">
     <div className="flex justify-between items-center mb-6">
       <h2 className="text-2xl font-semibold">Upcoming Movies</h2>
 

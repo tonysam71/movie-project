@@ -15,11 +15,11 @@ export default function Footer() {
             alt="Google Play"
             className="w-36 cursor-pointer"
           />
-          {/* <img
+          <img
             src="/ccb54c528f9bcf326ca48ea29bd6d890.png"
             alt="App Store"
             className="w-32 cursor-pointer"
-          /> */}
+          />
         </div>
 
         <div className="flex items-center gap-10">

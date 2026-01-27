@@ -1,29 +1,30 @@
-import React, { useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Navbar from './Components/Navbar'
-import Home from './Components/Home'
-import MovieDetails from './Components/MovieDetails'
-import Footer from './Components/Footer'
-import TheatreDetail from './Components/TheatreDetail'
-import './App.css'
+import React, { useEffect } from "react";
+import {  Routes, Route, useLocation } from "react-router-dom";
+import Navbar from "./Components/Navbar";
+import Home from "./Components/Home";
+import MovieDetails from "./Components/MovieDetails";
+import Footer from "./Components/Footer";
+import TheatreDetail from "./Components/TheatreDetail";
+import "./App.css";
+import Orders from "./Components/Orders";
 
 function App() {
-
-
+  let location = useLocation();
   return (
-    <BrowserRouter>
+  <>
       <Navbar />
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="/movie/:name" element={<MovieDetails />} />
-         <Route path="/theatre/:id" element={<TheatreDetail />} />
+        <Route path="/theatre/:id" element={<TheatreDetail />} />
       </Routes>
 
-      <Footer />
-    </BrowserRouter>
+      
+   {!location.pathname.includes("orders") && <Footer />}
+    </>
+  );
+}
 
-  )
-} 
-
-export default App
+export default App;

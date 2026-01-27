@@ -26,7 +26,7 @@ export default function Now() {
   }, []);
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 ml-5">
+    <section className="max-w-7xl mx-auto px-4 py-10 ">
       <h2 className="text-2xl font-semibold mb-6">
         Now Showing in Indore
       </h2>
