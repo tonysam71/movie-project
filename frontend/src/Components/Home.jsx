@@ -54,7 +54,7 @@ export default function Home() {
                 className="relative min-h-[500px] rounded-2xl overflow-hidden "
               >
 
-               
+
                 <div
                   className="absolute inset-0 bg-cover bg-center blur-xl scale-110"
                   style={{
