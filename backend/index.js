@@ -40,12 +40,8 @@ app.get("*",(req,res)=>{
   res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"))
 });
 
-app.get("/", (req, res) => {
-  res.send("Server is running");
-});
 
-
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+ 
+app.listen(4000, (err) => {
+  console.log( err||"Server running on port 4000");
 });
