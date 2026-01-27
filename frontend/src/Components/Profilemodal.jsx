@@ -17,11 +17,11 @@ export default function ProfileModal({ show, onClose, setUser }) {
   // otp
   const [otp, setOtp] = useState("");
 
-  const BASE_URL = "http://localhost:4000/api/user";
+  const BASE_URL = "/api/user";
 
   /* ---------------- LOGIN ---------------- */
   const loginUser = async () => {
-  const res = await fetch("http://localhost:4000/api/user/login", {
+  const res = await fetch("/api/user/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -45,7 +45,7 @@ export default function ProfileModal({ show, onClose, setUser }) {
   const fetchProfile = async () => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch("http://localhost:4000/api/user/profile", {
+  const res = await fetch("/api/user/profile", {
     headers: {
       token: token   
     },

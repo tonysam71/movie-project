@@ -18,7 +18,7 @@ export default function Home() {
   
     const getdata = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/movie/getmovies?category=now");
+        const res = await fetch("/api/movie/getmovies?category=now");
         const data = await res.json();
         console.log(data.data)
   

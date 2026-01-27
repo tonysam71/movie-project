@@ -18,7 +18,7 @@ export default function TheatresModal({ show, onClose }) {
   const fetchTheatres = async () => {
     try {
       const res = await fetch(
-        "http://localhost:4000/api/theatre/gettheatres"
+        "/api/theatre/gettheatres"
       );
       const result = await res.json();
       setTheatres(result.data || []);

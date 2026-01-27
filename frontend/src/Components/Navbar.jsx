@@ -25,7 +25,7 @@ export default function Navbar() {
 
   const fetchProfile = async (token) => {
     try {
-      const res = await fetch("http://localhost:4000/api/user/profile", {
+      const res = await fetch("/api/user/profile", {
         headers: { token },
       });
 

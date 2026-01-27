@@ -9,7 +9,7 @@ export default function Moviesmodel({ show, onClose }) {
   const getdata = async () => {
     try {
       const res = await fetch(
-        "http://localhost:4000/api/movie/getmovies?category=now"
+        "/api/movie/getmovies?category=now"
       );
       const data = await res.json();
 

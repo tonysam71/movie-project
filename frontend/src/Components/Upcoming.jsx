@@ -10,7 +10,7 @@ export default function Upcoming() {
   const getdata = async () => {
     try {
       const res = await fetch(
-        "http://localhost:4000/api/movie/getmovies/?category=upcoming"
+        "/api/movie/getmovies/?category=upcoming"
       );
       const data = await res.json();
       console.log(data.data);

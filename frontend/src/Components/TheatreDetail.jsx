@@ -34,7 +34,7 @@ export default function TheatreDetail() {
       setLoading(true);
 
       const res = await fetch(
-        `http://localhost:4000/api/theatre/filtertheatre/${id}`,
+        `/api/theatre/filtertheatre/${id}`,
       );
       const data = await res.json();
       console.log("API RESPONSE:", data);

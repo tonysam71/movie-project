@@ -47,7 +47,7 @@ export default function MovieDetails() {
   const getMovie = async () => {
     try {
       const res = await fetch(
-        `http://localhost:4000/api/movie/getmovie/${encodeURIComponent(name)}`
+        `/api/movie/getmovie/${encodeURIComponent(name)}`
       );
       const data = await res.json();
 
@@ -66,7 +66,7 @@ export default function MovieDetails() {
   const fetchShows = async (movieId) => {
     try {
       const res = await fetch(
-        `http://localhost:4000/api/showmovie/getshow/${movieId}`
+        `/api/showmovie/getshow/${movieId}`
       );
       const data = await res.json();
       console.log(data);

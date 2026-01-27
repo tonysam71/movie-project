@@ -5,7 +5,7 @@ export default function ViewDetailsModal({ movieName, onClose }) {
   const [activeTab, setActiveTab] = useState("Reviews");
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/movie/getmovie/" + movieName)
+    fetch("/api/movie/getmovie/" + movieName)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setMovie(data.data);
