@@ -10,10 +10,9 @@ let createMovie = async (req, res) => {
     }
 
     const poster = {
-  filename: req.file.filename,
-  url: `${process.env.BASEURL}/uploads/${req.file.filename}`,
-};
-
+      filename: req.file.filename,
+      url: process.env.BASEURL + req.file.filename,
+    };
 
     const releaseDate = req.body.releaseDate
       ? new Date(req.body.releaseDate)
@@ -97,12 +96,11 @@ let updateMovie = async (req, res) => {
 
     // agar naya poster aaya ho
     if (req.file) {
-  updateData.poster = {
-    filename: req.file.filename,
-    url: `${process.env.BASEURL}/uploads/${req.file.filename}`,
-  };
-}
-
+      updateData.poster = {
+        filename: req.file.filename,
+        url: process.env.BASEURL + req.file.filename,
+      };
+    }
 
     if (updateData.releaseDate) {
       const releaseDate = new Date(updateData.releaseDate);
