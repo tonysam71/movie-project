@@ -24,7 +24,7 @@ app.use("/api/user", movieUserRoute);
 app.use("/api/movie", movieRoute);
 app.use("/api/theatre", theatreRoute);
 app.use("/api/showmovie", showRoute);
-
+ 
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 app.get("*", (req, res) => {
@@ -36,6 +36,8 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
+
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
+
