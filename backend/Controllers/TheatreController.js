@@ -1,5 +1,5 @@
 let Theatre = require("../Models/theatreModel");
-let Show = require("../models/showModel");
+let Show = require("../Models/ShowModel")
 
 let createTheatre = async (req, res) => {
     try {

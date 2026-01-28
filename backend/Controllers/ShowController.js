@@ -1,4 +1,4 @@
-const Show = require("../models/showModel");
+const Show = require("../Models/ShowModel");
 const Theatre = require("../Models/theatreModel");
 let {ObjectId} = require("mongodb")
 exports.createShow = async (req, res) => {
