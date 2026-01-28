@@ -7,8 +7,12 @@ const path = require("path");
 const cors = require("cors");
 
 const app = express();
-connectDB();
-
+connectDB()
+  .then(() => console.log("DB connected"))
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
