@@ -26,9 +26,14 @@ const frontendPath = path.join(__dirname, "../frontend/dist");
 app.use(express.static(frontendPath)); 
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(frontendPath, "index.html"));
+  res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
 });
 
+app.use((err,req,res,next)=>{
+  if(err){
+    res.status(500).json({success:false,message:err.message})
+  }
+})
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, "0.0.0.0", () => {
