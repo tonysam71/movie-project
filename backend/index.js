@@ -15,9 +15,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/uploads", express.static(path.join(__dirname, "Uploads")));
+
+
 
 app.use("/api/user", require("./Routes/movieuserRoute"));
-app.use("/api/movie", require("./Routes/MovieRoute")); 
+app.use("/api/movie", require("./Routes/MovieRoute"));  
 app.use("/api/theatre", require("./Routes/TheatreRoute"));
 app.use("/api/showmovie", require("./Routes/showRoute"));
 
