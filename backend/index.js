@@ -23,13 +23,13 @@ app.use("/api/showmovie", require("./Routes/showRoute"));
 
 const frontendPath = path.join(__dirname, "../frontend/dist");
 
-app.use(express.static(frontendPath));
+app.use(express.static(frontendPath)); 
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
-// Server start
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
