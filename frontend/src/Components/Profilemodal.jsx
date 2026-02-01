@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { X } from "lucide-react";
 
 export default function ProfileModal({ show, onClose, setUser }) {
   const [mode, setMode] = useState("signin");
@@ -21,44 +22,33 @@ export default function ProfileModal({ show, onClose, setUser }) {
 
   /* ---------------- LOGIN ---------------- */
   const loginUser = async () => {
-  const res = await fetch("/api/user/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
+    const res = await fetch(`${BASE_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-  const data = await res.json();
+    const data = await res.json();
+    if (!data.success) return alert(data.message);
 
-  if (!data.success) {
-    alert(data.message);
-    return;
-  }
-
-  
-  localStorage.setItem("token", data.token);
-
- 
-  fetchProfile();
-};
+    localStorage.setItem("token", data.token);
+    fetchProfile();
+  };
 
   /* ---------------- PROFILE ---------------- */
   const fetchProfile = async () => {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  const res = await fetch("/api/user/profile", {
-    headers: {
-      token: token   
-    },
-  });
+    const res = await fetch(`${BASE_URL}/profile`, {
+      headers: { token },
+    });
 
-  const data = await res.json();
-
-  if (data.success) {
-    setUser(data.data); 
-    onClose();         
-  }
-};
-
+    const data = await res.json();
+    if (data.success) {
+      setUser(data.data);
+      onClose();
+    }
+  };
 
   /* ---------------- SIGNUP ---------------- */
   const registerUser = async () => {
@@ -69,7 +59,7 @@ export default function ProfileModal({ show, onClose, setUser }) {
         name,
         email,
         password,
-        mobileNumber, 
+        mobileNumber,
         address,
         interest,
       }),
@@ -108,19 +98,31 @@ export default function ProfileModal({ show, onClose, setUser }) {
     alert("OTP resent");
   };
 
+  if (!show) return null;
+
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center
-      ${show ? "visible bg-black/40 backdrop-blur-sm" : "invisible opacity-0"}`}
+      className="fixed inset-0 z-50 flex items-center justify-center
+      bg-black/40 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="bg-white w-[480px] md:w-[620px] rounded-3xl p-10 shadow-lg"
+        className="relative bg-white w-[90%] max-w-[620px]
+        rounded-3xl p-6 sm:p-10 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Logo */}
+        {/* CLOSE BUTTON */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 rounded-full
+          hover:bg-gray-100 transition"
+        >
+          <X size={22} />
+        </button>
+
+        {/* LOGO */}
         <div className="flex justify-center mb-4">
-          <img src="/booking.webp" className="w-36" alt="" />
+          <img src="/booking.webp" className="w-32 sm:w-36" alt="logo" />
         </div>
 
         {/* ---------------- SIGN IN ---------------- */}
@@ -148,7 +150,8 @@ export default function ProfileModal({ show, onClose, setUser }) {
 
             <button
               onClick={loginUser}
-              className="w-full py-3 mt-6 bg-black text-white rounded-lg text-lg"
+              className="w-full py-3 mt-6 bg-black
+              text-white rounded-lg text-lg"
             >
               Login
             </button>
@@ -208,7 +211,8 @@ export default function ProfileModal({ show, onClose, setUser }) {
 
             <button
               onClick={registerUser}
-              className="w-full py-3 mt-6 bg-black text-white rounded-lg text-lg"
+              className="w-full py-3 mt-6 bg-black
+              text-white rounded-lg text-lg"
             >
               Sign up
             </button>
@@ -230,7 +234,8 @@ export default function ProfileModal({ show, onClose, setUser }) {
 
             <button
               onClick={verifyOtp}
-              className="w-full py-3 mt-4 bg-black text-white rounded-lg"
+              className="w-full py-3 mt-4 bg-black
+              text-white rounded-lg"
             >
               Verify OTP
             </button>
