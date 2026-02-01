@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 
 export default function ProfileModal({ show, onClose, setUser }) {
@@ -36,22 +36,15 @@ export default function ProfileModal({ show, onClose, setUser }) {
   };
 
   /* ---------------- PROFILE ---------------- */
-//   const fetchProfile = async () => {
-//   const token = localStorage.getItem("token");
-//   if (!token) return;
-
-//   const res = await fetch(`${BASE_URL}/profile`, {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-
-//   const data = await res.json();
-//   if (data.success) {
-//     setUser(data.data);
-//     onClose();
-//   }
-// };
+  const fetchProfile = async () => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}/profile`, { headers: { token } });
+    const data = await res.json();
+    if (data.success) {
+      setUser(data.data);
+      onClose();
+    }
+  };
 
   /* ---------------- SIGNUP ---------------- */
   const registerUser = async () => {
@@ -131,9 +124,7 @@ export default function ProfileModal({ show, onClose, setUser }) {
         {/* ---------------- SIGN IN ---------------- */}
         {mode === "signin" && (
           <>
-            <h2 className="text-2xl font-semibold text-center mb-2">
-              Sign in
-            </h2>
+            <h2 className="text-2xl font-semibold text-center mb-2">Sign in</h2>
 
             <div className="space-y-4">
               <input
