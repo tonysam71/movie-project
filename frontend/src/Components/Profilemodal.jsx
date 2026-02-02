@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { X } from "lucide-react";
 
 export default function ProfileModal({ show, onClose, setUser }) {
@@ -18,41 +18,55 @@ export default function ProfileModal({ show, onClose, setUser }) {
   // otp
   const [otp, setOtp] = useState("");
 
-  const BASE_URL = "/api/user";
+  /* ✅ BASE URL FIX (DEV + RENDER) */
+  const BASE_URL =
+    import.meta.env.PROD
+      ? "https://movie-project-903x.onrender.com/api/user"
+      : "/api/user";
 
   /* ---------------- LOGIN ---------------- */
   const loginUser = async () => {
-    const res = await fetch(`${BASE_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch(`${BASE_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
-    if (!data.success) return alert(data.message);
+      const data = await res.json();
+      if (!data.success) return alert(data.message);
 
-    localStorage.setItem("token", data.token);
-    fetchProfile();
+      localStorage.setItem("token", data.token);
+      await fetchProfile();
+    } catch (err) {
+      alert("Login failed");
+    }
   };
 
   /* ---------------- PROFILE ---------------- */
   const fetchProfile = async () => {
-  const token = localStorage.getItem("token");
-  if (!token) return;
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-  const res = await fetch(`${BASE_URL}/profile`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+      const res = await fetch(`${BASE_URL}/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ MAIN FIX
+        },
+      });
 
-  const data = await res.json();
-  if (data.success) {
-    setUser(data.data);
-    onClose();
-  }
-};
+      const data = await res.json();
 
+      if (data.success) {
+        setUser(data.data);
+        onClose();
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert("Profile fetch failed");
+    }
+  };
 
   /* ---------------- SIGNUP ---------------- */
   const registerUser = async () => {
@@ -115,50 +129,47 @@ export default function ProfileModal({ show, onClose, setUser }) {
         rounded-3xl p-6 sm:p-10 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* CLOSE BUTTON */}
+        {/* CLOSE */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full
-          hover:bg-gray-100 transition"
+          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100"
         >
           <X size={22} />
         </button>
 
         {/* LOGO */}
         <div className="flex justify-center mb-4">
-          <img src="/booking.webp" className="w-32 sm:w-36" alt="logo" />
+          <img src="/booking.webp" className="w-32" />
         </div>
 
-        {/* ---------------- SIGN IN ---------------- */}
+        {/* SIGN IN */}
         {mode === "signin" && (
           <>
-            <h2 className="text-2xl font-semibold text-center mb-2">Sign in</h2>
+            <h2 className="text-2xl font-semibold text-center mb-4">
+              Sign in
+            </h2>
 
-            <div className="space-y-4">
-              <input
-                type="email"
-                placeholder="Email"
-                className="border w-full px-4 py-3 rounded-lg"
-                onChange={(e) => setEmail(e.target.value)}
-              />
+            <input
+              placeholder="Email"
+              className="border w-full px-4 py-3 rounded-lg mb-3"
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-              <input
-                type="password"
-                placeholder="Password"
-                className="border w-full px-4 py-3 rounded-lg"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+            <input
+              type="password"
+              placeholder="Password"
+              className="border w-full px-4 py-3 rounded-lg"
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
             <button
               onClick={loginUser}
-              className="w-full py-3 mt-6 bg-black
-              text-white rounded-lg text-lg"
+              className="w-full py-3 mt-6 bg-black text-white rounded-lg"
             >
               Login
             </button>
 
-            <p className="text-center text-sm mt-4">
+            <p className="text-center mt-4 text-sm">
               New user?{" "}
               <span
                 onClick={() => setMode("signup")}
@@ -170,81 +181,62 @@ export default function ProfileModal({ show, onClose, setUser }) {
           </>
         )}
 
-        {/* ---------------- SIGN UP ---------------- */}
+        {/* SIGN UP */}
         {mode === "signup" && !otpMode && (
           <>
-            <h2 className="text-2xl font-semibold text-center mb-6">
+            <h2 className="text-2xl font-semibold text-center mb-4">
               Create account
             </h2>
 
-            <div className="space-y-4">
+            {[
+              ["Full Name", setName],
+              ["Email", setEmail],
+              ["Password", setPassword, "password"],
+              ["Mobile Number", setMobileNumber],
+              ["Address", setAddress],
+              ["Interest", setInterest],
+            ].map(([ph, fn, type], i) => (
               <input
-                placeholder="Full Name"
-                className="border w-full px-4 py-3 rounded-lg"
-                onChange={(e) => setName(e.target.value)}
+                key={i}
+                type={type || "text"}
+                placeholder={ph}
+                className="border w-full px-4 py-3 rounded-lg mb-3"
+                onChange={(e) => fn(e.target.value)}
               />
-              <input
-                placeholder="Email"
-                className="border w-full px-4 py-3 rounded-lg"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <input
-                placeholder="Password"
-                type="password"
-                className="border w-full px-4 py-3 rounded-lg"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <input
-                placeholder="Mobile Number"
-                className="border w-full px-4 py-3 rounded-lg"
-                onChange={(e) => setMobileNumber(e.target.value)}
-              />
-              <input
-                placeholder="Address"
-                className="border w-full px-4 py-3 rounded-lg"
-                onChange={(e) => setAddress(e.target.value)}
-              />
-              <input
-                placeholder="Interest"
-                className="border w-full px-4 py-3 rounded-lg"
-                onChange={(e) => setInterest(e.target.value)}
-              />
-            </div>
+            ))}
 
             <button
               onClick={registerUser}
-              className="w-full py-3 mt-6 bg-black
-              text-white rounded-lg text-lg"
+              className="w-full py-3 mt-4 bg-black text-white rounded-lg"
             >
               Sign up
             </button>
           </>
         )}
 
-        {/* ---------------- OTP ---------------- */}
+        {/* OTP */}
         {mode === "signup" && otpMode && (
           <>
-            <h2 className="text-xl font-semibold text-center mb-4">
+            <h2 className="text-xl font-semibold text-center mb-3">
               Enter OTP
             </h2>
 
             <input
-              placeholder="Enter OTP"
+              placeholder="OTP"
               className="border w-full px-4 py-3 rounded-lg"
               onChange={(e) => setOtp(e.target.value)}
             />
 
             <button
               onClick={verifyOtp}
-              className="w-full py-3 mt-4 bg-black
-              text-white rounded-lg"
+              className="w-full py-3 mt-4 bg-black text-white rounded-lg"
             >
               Verify OTP
             </button>
 
             <p
-              className="text-center mt-3 underline cursor-pointer text-sm"
               onClick={resendOtp}
+              className="text-center mt-3 underline cursor-pointer text-sm"
             >
               Resend OTP
             </p>
