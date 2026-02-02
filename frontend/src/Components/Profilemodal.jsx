@@ -45,6 +45,7 @@ export default function ProfileModal({ show, onClose, setUser }) {
       onClose();
     }
   };
+
   /* ---------------- SIGNUP ---------------- */
   const registerUser = async () => {
     const res = await fetch(`${BASE_URL}/register`, {
