@@ -27,15 +27,15 @@ export default function ProfileModal({ show, onClose, setUser }) {
     fetchProfile();
   };
   /* ---------------- PROFILE ---------------- */
-  const fetchProfile = async () => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`${BASE_URL}/profile`, { headers: { token } });
-    const data = await res.json();
-    if (data.success) {
-      setUser(data.data);
-      onClose();
-    }
-  };
+  // const fetchProfile = async () => {
+  //   const token = localStorage.getItem("token");
+  //   const res = await fetch(`${BASE_URL}/profile`, { headers: { token } });
+  //   const data = await res.json();
+  //   if (data.success) {
+  //     setUser(data.data);
+  //     onClose();
+  //   }
+  // };
   /* ---------------- SIGNUP ---------------- */
    const registerUser = async () => {
       const res = await fetch(`${BASE_URL}/register`, {
