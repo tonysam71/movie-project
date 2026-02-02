@@ -37,14 +37,22 @@ export default function ProfileModal({ show, onClose, setUser }) {
 
   /* ---------------- PROFILE ---------------- */
   const fetchProfile = async () => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`${BASE_URL}/profile`, { headers: { token } });
-    const data = await res.json();
-    if (data.success) {
-      setUser(data.data);
-      onClose();
-    }
-  };
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  const res = await fetch(`${BASE_URL}/profile`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json();
+  if (data.success) {
+    setUser(data.data);
+    onClose();
+  }
+};
+
 
   /* ---------------- SIGNUP ---------------- */
   const registerUser = async () => {
