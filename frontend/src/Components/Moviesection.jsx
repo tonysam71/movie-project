@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { data, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function MovieSection({ section, title, filter }) {
   const [movies, setMovies] = useState([]);
@@ -8,31 +8,25 @@ export default function MovieSection({ section, title, filter }) {
   const [showAll, setShowAll] = useState(false);
 
   const fetchMovies = async () => {
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const cleanParams = Object.fromEntries(
-      Object.entries({
-        section,
-        language: filter.language,
-        genre: filter.genre,
-      }).filter(([_, v]) => v)
-    );
+      const { data } = await axios.get(`/api/movie/filtermovie-query`, {
+        params: {
+          section,
+          language: filter.language,
+          genre: filter.genre,
+        },
+      });
+      console.log(data);
 
-    const { data } = await axios.get(
-      "/api/movie/filtermovie-query",
-      { params: cleanParams }
-    );
-
-    setMovies(data.data || []);
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setLoading(false);
-  }
- 
-};
-
+      setMovies(data.data || []);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchMovies();
@@ -43,8 +37,8 @@ export default function MovieSection({ section, title, filter }) {
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-10">
+      <h2 className="text-2xl font-semibold">{title}</h2>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
-        <h2 className="text-2xl font-semibold">{title}</h2>
 
         {section === "upcoming" && movies.length > 4 && (
           <button

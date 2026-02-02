@@ -4,133 +4,119 @@ import { X } from "lucide-react";
 export default function ProfileModal({ show, onClose, setUser }) {
   const [mode, setMode] = useState("signin");
   const [otpMode, setOtpMode] = useState(false);
+
+  // signin
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // signup
   const [name, setName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [address, setAddress] = useState("");
   const [interest, setInterest] = useState("");
+
+  // otp
   const [otp, setOtp] = useState("");
 
-  // 🔥 Replace this with your backend Render URL
-  const BACKEND_URL = "https://https://movie-project-903x.onrender.com";
+  const BASE_URL = "/api/user";
 
   /* ---------------- LOGIN ---------------- */
   const loginUser = async () => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/user/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (!data.success) return alert(data.message);
+    const res = await fetch(`${BASE_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      localStorage.setItem("token", data.token);
-      await fetchProfile();
-    } catch (error) {
-      alert("Login failed: " + error.message);
-    }
+    const data = await res.json();
+    if (!data.success) return alert(data.message);
+
+    localStorage.setItem("token", data.token);
+    fetchProfile();
   };
 
   /* ---------------- PROFILE ---------------- */
   const fetchProfile = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return;
-
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/user/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-
-      if (!data.success) {
-        localStorage.removeItem("token");
-        alert("Session expired, please login again");
-        return;
-      }
-
+    const res = await fetch(`${BASE_URL}/profile`, { headers: { token } });
+    const data = await res.json();
+    if (data.success) {
       setUser(data.data);
       onClose();
-    } catch (error) {
-      alert("Failed to fetch profile: " + error.message);
     }
   };
 
   /* ---------------- SIGNUP ---------------- */
   const registerUser = async () => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/user/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          mobileNumber,
-          address,
-          interest,
-        }),
-      });
-      const data = await res.json();
-      if (!data.success) return alert(data.message);
-      alert("OTP sent to email");
-      setOtpMode(true);
-    } catch (error) {
-      alert("Signup failed: " + error.message);
-    }
+    const res = await fetch(`${BASE_URL}/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        mobileNumber,
+        address,
+        interest,
+      }),
+    });
+
+    const data = await res.json();
+    if (!data.success) return alert(data.message);
+
+    alert("OTP sent to email");
+    setOtpMode(true);
   };
 
   /* ---------------- VERIFY OTP ---------------- */
   const verifyOtp = async () => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/user/verify-otp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
-      });
-      const data = await res.json();
-      if (!data.success) return alert(data.message);
+    const res = await fetch(`${BASE_URL}/verify-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp }),
+    });
 
-      localStorage.setItem("token", data.token);
-      await fetchProfile();
-    } catch (error) {
-      alert("OTP verification failed: " + error.message);
-    }
+    const data = await res.json();
+    if (!data.success) return alert(data.message);
+
+    alert("Account verified, please login");
+    setOtpMode(false);
+    setMode("signin");
   };
 
   /* ---------------- RESEND OTP ---------------- */
   const resendOtp = async () => {
-    try {
-      await fetch(`${BACKEND_URL}/api/user/resend-otp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      alert("OTP resent");
-    } catch (error) {
-      alert("Failed to resend OTP: " + error.message);
-    }
+    await fetch(`${BASE_URL}/resend-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    alert("OTP resent");
   };
 
   if (!show) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center
+      bg-black/40 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="relative bg-white w-[90%] max-w-[620px] rounded-3xl p-6 sm:p-10 shadow-lg"
+        className="relative bg-white w-[90%] max-w-[620px]
+        rounded-3xl p-6 sm:p-10 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition"
+          className="absolute top-4 right-4 p-2 rounded-full
+          hover:bg-gray-100 transition"
         >
           <X size={22} />
         </button>
 
+        {/* LOGO */}
         <div className="flex justify-center mb-4">
           <img src="/booking.webp" className="w-32 sm:w-36" alt="logo" />
         </div>
@@ -139,6 +125,7 @@ export default function ProfileModal({ show, onClose, setUser }) {
         {mode === "signin" && (
           <>
             <h2 className="text-2xl font-semibold text-center mb-2">Sign in</h2>
+
             <div className="space-y-4">
               <input
                 type="email"
@@ -146,6 +133,7 @@ export default function ProfileModal({ show, onClose, setUser }) {
                 className="border w-full px-4 py-3 rounded-lg"
                 onChange={(e) => setEmail(e.target.value)}
               />
+
               <input
                 type="password"
                 placeholder="Password"
@@ -153,12 +141,15 @@ export default function ProfileModal({ show, onClose, setUser }) {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+
             <button
               onClick={loginUser}
-              className="w-full py-3 mt-6 bg-black text-white rounded-lg text-lg"
+              className="w-full py-3 mt-6 bg-black
+              text-white rounded-lg text-lg"
             >
               Login
             </button>
+
             <p className="text-center text-sm mt-4">
               New user?{" "}
               <span
@@ -177,6 +168,7 @@ export default function ProfileModal({ show, onClose, setUser }) {
             <h2 className="text-2xl font-semibold text-center mb-6">
               Create account
             </h2>
+
             <div className="space-y-4">
               <input
                 placeholder="Full Name"
@@ -210,9 +202,11 @@ export default function ProfileModal({ show, onClose, setUser }) {
                 onChange={(e) => setInterest(e.target.value)}
               />
             </div>
+
             <button
               onClick={registerUser}
-              className="w-full py-3 mt-6 bg-black text-white rounded-lg text-lg"
+              className="w-full py-3 mt-6 bg-black
+              text-white rounded-lg text-lg"
             >
               Sign up
             </button>
@@ -225,17 +219,21 @@ export default function ProfileModal({ show, onClose, setUser }) {
             <h2 className="text-xl font-semibold text-center mb-4">
               Enter OTP
             </h2>
+
             <input
               placeholder="Enter OTP"
               className="border w-full px-4 py-3 rounded-lg"
               onChange={(e) => setOtp(e.target.value)}
             />
+
             <button
               onClick={verifyOtp}
-              className="w-full py-3 mt-4 bg-black text-white rounded-lg text-lg"
+              className="w-full py-3 mt-4 bg-black
+              text-white rounded-lg"
             >
               Verify OTP
             </button>
+
             <p
               className="text-center mt-3 underline cursor-pointer text-sm"
               onClick={resendOtp}

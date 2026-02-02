@@ -1,4 +1,4 @@
-// components/FilterBar.jsx
+
 export default function FilterBar({ filter, setFilter }) {
   return (
     <div className="flex flex-wrap gap-3 max-w-7xl mx-auto px-4 py-8">
