@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { data, Link } from "react-router-dom";
 
 export default function MovieSection({ section, title, filter }) {
   const [movies, setMovies] = useState([]);
@@ -8,25 +8,31 @@ export default function MovieSection({ section, title, filter }) {
   const [showAll, setShowAll] = useState(false);
 
   const fetchMovies = async () => {
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const { data } = await axios.get(`/api/movie/filtermovie-query`, {
-        params: {
-          section,
-          language: filter.language,
-          genre: filter.genre,
-        },
-      });
-      console.log(data);
+    const cleanParams = Object.fromEntries(
+      Object.entries({
+        section,
+        language: filter.language,
+        genre: filter.genre,
+      }).filter(([_, v]) => v)
+    );
 
-      setMovies(data.data || []);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const { data } = await axios.get(
+      "/api/movie/filtermovie-query",
+      { params: cleanParams }
+    );
+
+    setMovies(data.data || []);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+ 
+};
+
 
   useEffect(() => {
     fetchMovies();
