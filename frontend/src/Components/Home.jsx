@@ -37,7 +37,7 @@ export default function Home() {
   return (
     <>
       {/* HERO SLIDER */}
-      <div className="w-full mt-[60px] md:mt-[80px] py-8 md:py-12 px-4 sm:px-6 md:px-16">
+      <div className="w-full mt-[60px] md:mt-[79px] py-8 md:py-12 px-4 sm:px-6 md:px-16">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           navigation
