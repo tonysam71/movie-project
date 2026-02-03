@@ -36,9 +36,10 @@ export default function MovieSection({ section, title, filter }) {
     section === "upcoming" && !showAll ? movies.slice(0, 4) : movies;
 
   return (
+    <>
     <section className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-semibold">{title}</h2>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
+      <h2 className="text-2xl font-semibold">{title}</h2>
 
         {section === "upcoming" && movies.length > 4 && (
           <button
@@ -61,18 +62,18 @@ export default function MovieSection({ section, title, filter }) {
         className={`grid gap-4 sm:gap-6 ${
           section === "upcoming"
             ? showAll
-              ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-              : "grid-cols-2 sm:grid-cols-2 md:grid-cols-4"
+            ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+            : "grid-cols-2 sm:grid-cols-2 md:grid-cols-4"
             : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         }`}
-      >
+        >
         {visibleMovies.map((movie) => (
           <div
             key={movie._id}
             className="bg-white rounded-xl shadow hover:shadow-lg transition"
           >
             <Link to={`/movie/${encodeURIComponent(movie.name)}`}>
-              <div className="w-full `aspect-[2/3]` overflow-hidden rounded-t-xl">
+              <div className="w-full  overflow-hidden rounded-t-xl">
                 <img
                   src={movie.poster?.url}
                   alt={movie.name}
@@ -93,5 +94,6 @@ export default function MovieSection({ section, title, filter }) {
         ))}
       </div>
     </section>
+   </>
   );
 }

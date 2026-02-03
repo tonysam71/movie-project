@@ -9,7 +9,7 @@ let generatetoken = async (details, secretKey, expiretime) => {
 };
 
 let decodetoken = async (token, secretKey) => {
-  // ✅ VERIFY, not decode
+
   return jwt.verify(token, secretKey);
 };
 

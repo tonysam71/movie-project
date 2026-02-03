@@ -98,22 +98,22 @@ export default function Home() {
         </Swiper>
       </div>
 
-      {/* OTHER SECTIONS */}
+      
        {/* ONE FILTER BAR */}
       <Filterbar filter={filter} setFilter={setFilter} />
 
-      {/* TWO SECTIONS */}
+   
       
         <Moviesection
+        filter={filter}
         section="now"
         title="Now Showing in Indore"
-        filter={filter}
       />
 
       <Moviesection
+        filter={filter}
         section="upcoming"
         title="Upcoming Movies"
-        filter={filter}
       />
       
       <Languages />

@@ -94,7 +94,7 @@ let updateMovie = async (req, res) => {
 
     let updateData = { ...req.body };
 
-    // agar naya poster aaya ho
+   
     if (req.file) {
       updateData.poster = {
         filename: req.file.filename,
@@ -176,6 +176,43 @@ let FilterMovie = async (req, res) => {
   }
 };
 
+ const filterMovieQuery = async (req, res) => {
+  try {
+    const { section, language, genre } = req.query;
+
+    let query = {};
+
+    if (section) {
+      query.category = section;
+    }
+
+    if (language) {
+      query.language = new RegExp(`^${language}$`, "i"); // case-insensitive
+    }
+
+    if (genre) {
+      query.genre = new RegExp(`^${genre}$`, "i"); // case-insensitive
+    }
+
+    console.log("Mongo Query:", query);
+
+    const movies = await Movie.find(query).sort({ releaseDate: 1 });
+
+    res.status(200).json({
+      success: true,
+      count: movies.length,
+      data: movies,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+ 
 module.exports = {
   createMovie,
   getMovies,
@@ -183,4 +220,5 @@ module.exports = {
   updateMovie,
   deleteMovie,
   FilterMovie,
+filterMovieQuery,
 };
