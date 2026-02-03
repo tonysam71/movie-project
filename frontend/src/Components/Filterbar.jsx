@@ -1,7 +1,7 @@
 
 export default function FilterBar({ filter, setFilter }) {
   return (
-    <div className="flex flex-wrap gap-3 max-w-7xl mx-auto px-4 py-8">
+    <div className="flex flex-wrap gap-3 max-w-7xl mx-auto px-4 ">
       <button
         onClick={() => setFilter({})}
         className="px-4 py-2 border rounded-xl hover:bg-black hover:text-white"

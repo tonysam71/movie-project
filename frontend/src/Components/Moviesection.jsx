@@ -18,7 +18,6 @@ export default function MovieSection({ section, title, filter }) {
           genre: filter.genre,
         },
       });
-      console.log(data);
 
       setMovies(data.data || []);
     } catch (error) {
@@ -37,7 +36,7 @@ export default function MovieSection({ section, title, filter }) {
 
   return (
     <>
-    <section className="max-w-7xl mx-auto px-4 py-10">
+    <section className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
       <h2 className="text-2xl font-semibold">{title}</h2>
 

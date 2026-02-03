@@ -62,7 +62,10 @@ export default function ProfileModal({ show, onClose, setUser }) {
     });
 
     const data = await res.json();
-    if (!data.success) return alert(data.message);
+    if (!data.success){
+      console.log(data)
+       return alert(data.message)
+    };
 
     alert("OTP sent to email");
     setOtpMode(true);

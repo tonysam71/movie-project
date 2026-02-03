@@ -7,7 +7,6 @@ const storage = multer.diskStorage({
         cb(null, uploadpath)
     },
     filename: function (req, file, cb) {
-        console.log("insideupload", file)
         cb(null, Date.now() + file.originalname)
     }
 })

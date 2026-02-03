@@ -37,7 +37,6 @@ export default function TheatreDetail() {
         `/api/theatre/filtertheatre/${id}`,
       );
       const data = await res.json();
-      console.log("API RESPONSE:", data);
 
       if (!data.success) {
         setShows([]);

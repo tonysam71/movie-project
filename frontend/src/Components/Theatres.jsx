@@ -28,7 +28,6 @@ export default function TheatresModal({ show, onClose }) {
   };
 
   const openTheatrePage = (theatreId) => {
-  console.log("CLICKED THEATRE ID:", theatreId);
   onClose();
   navigate(`/theatre/${theatreId}`);
 };

@@ -20,9 +20,7 @@ const sendEmail = async (sendto, subject, text, html) => {
       html,
     });
 
-    console.log("✅ Email sent to:", sendto);
   } catch (error) {
-    console.error("❌ Email error:", error.message);
     throw error;
   }
 };

@@ -14,7 +14,6 @@ exports.getShows = async (req, res) => {
     try {
         let { movieId } = req.params;
         let newShow = await Show.find({"movie":movieId}).populate("theatre")
-        console.log(newShow)
         res.status(200).json({ success: true, data: newShow })
     } catch (error) {
         res.status(500).json({ success: false, message: error.message })

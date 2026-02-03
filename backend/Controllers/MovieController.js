@@ -194,7 +194,6 @@ let FilterMovie = async (req, res) => {
       query.genre = new RegExp(`^${genre}$`, "i"); // case-insensitive
     }
 
-    console.log("Mongo Query:", query);
 
     const movies = await Movie.find(query).sort({ releaseDate: 1 });
 

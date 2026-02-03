@@ -100,14 +100,13 @@ export default function Home() {
 
       
        {/* ONE FILTER BAR */}
-      <Filterbar filter={filter} setFilter={setFilter} />
 
-   
-      
+    <div className="text-2xl font-semibold max-w-7xl mx-auto px-4 py-8">Now Showing in Indore</div>
+       <Filterbar filter={filter} setFilter={setFilter} />
+     
         <Moviesection
         filter={filter}
         section="now"
-        title="Now Showing in Indore"
       />
 
       <Moviesection
