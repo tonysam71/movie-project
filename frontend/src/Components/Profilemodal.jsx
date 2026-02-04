@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import axios from 'axios';
 
 export default function ProfileModal({ show, onClose, setUser }) {
   const [mode, setMode] = useState("signin");
@@ -22,80 +23,90 @@ export default function ProfileModal({ show, onClose, setUser }) {
 
   /* ---------------- LOGIN ---------------- */
   const loginUser = async () => {
-    const res = await fetch(`${BASE_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+  try {
+    const res = await axios.post(`${BASE_URL}/login`, {
+      email,
+      password,
     });
 
-    const data = await res.json();
-    if (!data.success) return alert(data.message);
+    if (!res.data.success) return alert(res.data.message);
 
-    localStorage.setItem("token", data.token);
+    localStorage.setItem("token", res.data.token);
     fetchProfile();
-  };
+  } catch (error) {
+    alert(error.response?.data?.message || "Login failed");
+  }
+};
 
   /* ---------------- PROFILE ---------------- */
   const fetchProfile = async () => {
+  try {
     const token = localStorage.getItem("token");
-    const res = await fetch(`${BASE_URL}/profile`, { headers: { token } });
-    const data = await res.json();
-    if (data.success) {
-      setUser(data.data);
+
+    const res = await axios.get(`${BASE_URL}/profile`, {
+      headers: { token },
+      // best practice:
+      // headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (res.data.success) {
+      setUser(res.data.data);
       onClose();
     }
-  };
+  } catch (error) {
+    console.error("Profile error:", error);
+  }
+};
+
 
   /* ---------------- SIGNUP ---------------- */
   const registerUser = async () => {
-    const res = await fetch(`${BASE_URL}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-        mobileNumber,
-        address,
-        interest,
-      }),
+  try {
+    const res = await axios.post(`${BASE_URL}/register`, {
+      name,
+      email,
+      password,
+      mobileNumber,
+      address,
+      interest,
     });
 
-    const data = await res.json();
-    if (!data.success){
-      console.log(data)
-       return alert(data.message)
-    };
+    if (!res.data.success) return alert(res.data.message);
 
     alert("OTP sent to email");
     setOtpMode(true);
-  };
+  } catch (error) {
+    alert(error.response?.data?.message || "Signup failed");
+  }
+};
 
   /* ---------------- VERIFY OTP ---------------- */
   const verifyOtp = async () => {
-    const res = await fetch(`${BASE_URL}/verify-otp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, otp }),
+  try {
+    const res = await axios.post(`${BASE_URL}/verify-otp`, {
+      email,
+      otp,
     });
 
-    const data = await res.json();
-    if (!data.success) return alert(data.message);
+    if (!res.data.success) return alert(res.data.message);
 
     alert("Account verified, please login");
     setOtpMode(false);
     setMode("signin");
-  };
+  } catch (error) {
+    alert(error.response?.data?.message || "OTP verification failed");
+  }
+};
 
   /* ---------------- RESEND OTP ---------------- */
   const resendOtp = async () => {
-    await fetch(`${BASE_URL}/resend-otp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+  try {
+    await axios.post(`${BASE_URL}/resend-otp`, { email });
     alert("OTP resent");
-  };
+  } catch (error) {
+    alert("Failed to resend OTP");
+  }
+};
 
   if (!show) return null;
 

@@ -5,6 +5,7 @@ import Searchmodal from "./Searchmodal";
 import { NavLink, useNavigate } from "react-router-dom";
 import Theatres from "./Theatres";
 import { Menu, X } from "lucide-react";
+import Userprofile from "./Userprofile";
 
 export default function Navbar() {
   const [movie, setMovie] = useState(false);
@@ -12,6 +13,8 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [theatreOpen, setTheatreOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+
 
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -99,11 +102,15 @@ export default function Navbar() {
           {/* PROFILE + MOBILE MENU */}
           <div className="flex items-center gap-3">
             {/* PROFILE */}
-            {user ? (
-              <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center font-semibold">
-                {user.name[0].toUpperCase()}
-              </div>
-            ) : (
+           {user ? (
+  <div
+    onClick={() => setProfileOpen(true)}
+    className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center font-semibold cursor-pointer"
+  >
+    {user.name[0].toUpperCase()}
+  </div>
+) : (
+
               <div
                 onClick={() => setOpen(true)}
                 className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer"
@@ -195,6 +202,12 @@ export default function Navbar() {
       />
 
       <Searchmodal show={searchOpen} onClose={() => setSearchOpen(false)} />
+         <Userprofile
+  show={profileOpen}
+  onClose={() => setProfileOpen(false)}
+  user={user}
+  setUser={setUser}
+/>
     </>
   );
 }

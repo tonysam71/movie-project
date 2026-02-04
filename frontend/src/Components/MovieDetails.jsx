@@ -1,39 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import VeiwDetailsModal from "./ViewDetailsModal";
-
-const languages = [
-  "Hindi Movies",
-  "English Movies",
-  "Telugu Movies",
-  "Tamil Movies",
-  "Kannada Movies",
-  "Bengali Movies",
-  "Bhojpuri Movies",
-  "Malayalam Movies",
-  "Odia Movies",
-];
-
-const genres = [
-  "Comedy Movies",
-  "Action Movies",
-  "Drama Movies",
-  "Romance Movies",
-  "Horror Movies",
-  "Thriller Movies",
-  "Crime Movies",
-  "Mystery Movies",
-  "Biography Movies",
-];
-
-const nowShowing = [
-  "Tere Ishk Mein",
-  "Dhurandhar",
-  "De De Pyaar De 2",
-  "Zootopia 2",
-  "Mastiii 4",
-  "120 Bahadur",
-];
+import Languages from "./Languages";
+import Gen from "./Genre";
 
 export default function MovieDetails() {
   const { name } = useParams();
@@ -270,61 +239,12 @@ export default function MovieDetails() {
           </div>
         ))}
 
-        {/* BOTTOM SECTIONS */}
-        <h2 className="text-lg md:text-xl font-semibold mt-10 mb-4">
-          Explore Latest Movies in Indore by Language
-        </h2>
-
-        <div className="flex gap-2 md:gap-3 flex-wrap mb-10">
-          {languages.map((lang, i) => (
-            <span
-              key={i}
-              className="px-3 md:px-5 py-1.5 md:py-2
-                         text-xs md:text-sm
-                         rounded-full border bg-white
-                         hover:bg-gray-100 cursor-pointer"
-            >
-              {lang}
-            </span>
-          ))}
+       
         </div>
 
-        <h2 className="text-lg md:text-xl font-semibold mb-4">
-          Explore Latest Movies in Indore by Genre
-        </h2>
-
-        <div className="flex gap-2 md:gap-3 flex-wrap mb-10">
-          {genres.map((genre, i) => (
-            <span
-              key={i}
-              className="px-3 md:px-5 py-1.5 md:py-2
-                         text-xs md:text-sm
-                         rounded-full border bg-white
-                         hover:bg-gray-100 cursor-pointer"
-            >
-              {genre}
-            </span>
-          ))}
-        </div>
-
-        <h2 className="text-lg md:text-xl font-semibold mb-4">
-          Now Showing in Indore
-        </h2>
-
-        <div className="flex gap-2 md:gap-3 flex-wrap">
-          {nowShowing.map((movie, i) => (
-            <span
-              key={i}
-              className="px-3 md:px-5 py-1.5 md:py-2
-                         text-xs md:text-sm
-                         rounded-full border bg-white
-                         hover:bg-gray-200 cursor-pointer"
-            >
-              {movie}
-            </span>
-          ))}
-        </div>
-      </div>
+        <Languages />
+              <Gen/>
+      
     </>
   );
 }

@@ -194,6 +194,7 @@ let FilterMovie = async (req, res) => {
       query.genre = new RegExp(`^${genre}$`, "i"); // case-insensitive
     }
 
+    console.log("Mongo Query:", query);
 
     const movies = await Movie.find(query).sort({ releaseDate: 1 });
 
@@ -210,6 +211,43 @@ let FilterMovie = async (req, res) => {
   }
 };
 
+let getlang = async (req, res) => {
+    try {
+        let movies = await Movie.find().distinct("language");
+        res.json({ success: true, message: "Movie Get Successfully", data: movies })
+ 
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message })
+    }
+}
+ 
+
+let getgenre = async (req, res) => {
+  try {
+    const { genre } = req.query;
+    const today = new Date();
+
+    let filter = {};
+
+    if (genre === "now") {
+      filter.releaseDate = { $lte: today };
+    }
+
+    if (genre === "upcoming") {
+      filter.releaseDate = { $gt: today };
+    }
+
+        let movies = await Movie.find().distinct("genre");
+
+    res.json({
+      success: true,
+      count: movies.length,
+      data: movies,
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
 
  
 module.exports = {
@@ -220,4 +258,6 @@ module.exports = {
   deleteMovie,
   FilterMovie,
 filterMovieQuery,
+getlang,
+getgenre
 };

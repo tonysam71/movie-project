@@ -7,6 +7,7 @@ import Footer from "./Components/Footer";
 import TheatreDetail from "./Components/TheatreDetail";
 import "./App.css";
 import Orders from "./Components/Orders";
+import Moviecard from "./Components/Moviecard";
 
 function App() {
   let location = useLocation();
@@ -19,6 +20,7 @@ function App() {
         <Route path="/orders" element={<Orders />} />
         <Route path="/movie/:name" element={<MovieDetails />} />
         <Route path="/theatre/:id" element={<TheatreDetail />} />
+        <Route path="/movies/list/:type/:value" element={<Moviecard />}/>
       </Routes>
 
       

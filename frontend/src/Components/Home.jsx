@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Moviesection from '../Components/Moviesection'
 import Languages from "./Languages";
+import Gen from "./Genre";
 import Filterbar from "./Filterbar";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
@@ -72,7 +73,7 @@ export default function Home() {
                       </h1>
 
                       <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-6">
-                        {movie.genre} | {movie.lang}
+                        {(movie.genre).join(', ')} | {(movie.language).join(', ')}
                       </p>
 
                       <button className="bg-white text-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-sm sm:text-base md:text-lg font-semibold hover:bg-gray-200">
@@ -116,6 +117,7 @@ export default function Home() {
       />
       
       <Languages />
+      <Gen/>
     </>
   );
 }
