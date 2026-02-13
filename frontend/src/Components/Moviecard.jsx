@@ -49,9 +49,7 @@ export default function Moviecard() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
         {movies.map((movie) => (
-          <Link
-            key={movie._id}
-            to={`/movie/${encodeURIComponent(movie.name)}`}
+           <Link to={`/movie/${movie.slug}`}
             className="bg-white rounded-xl shadow hover:shadow-lg transition"
           >
             <img

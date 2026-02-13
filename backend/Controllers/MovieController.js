@@ -70,11 +70,11 @@ let getMovies = async (req, res) => {
 };
 let getMovie = async (req, res) => {
   try {
-    let { name } = req.params;
+    const { slug } = req.params;
 
-    let decodedName = decodeURIComponent(name);
+    
 
-    let movie = await Movie.findOne({ name: decodedName });
+    const movie = await Movie.findOne({ slug });
 
     if (!movie) {
       return res
@@ -82,11 +82,12 @@ let getMovie = async (req, res) => {
         .json({ success: false, message: "Movie not found" });
     }
 
-    res.status(200).json({ success: true, message: "found", data: movie });
+    res.json({ success: true, data: movie });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
 };
+
 
 let updateMovie = async (req, res) => {
   try {
@@ -94,7 +95,24 @@ let updateMovie = async (req, res) => {
 
     let updateData = { ...req.body };
 
-   
+    if (updateData.name) {
+  let slug = updateData.name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/\s+/g, "-");
+
+  const slugExists = await Movie.findOne({ slug, _id: { $ne: id } });
+
+  if (slugExists) {
+    slug = `${slug}-${Date.now()}`;
+  }
+
+  updateData.slug = slug;
+}
+
+
+    // poster update
     if (req.file) {
       updateData.poster = {
         filename: req.file.filename,
@@ -102,6 +120,7 @@ let updateMovie = async (req, res) => {
       };
     }
 
+    // releaseDate logic
     if (updateData.releaseDate) {
       const releaseDate = new Date(updateData.releaseDate);
       const today = new Date();
@@ -111,6 +130,7 @@ let updateMovie = async (req, res) => {
 
     const movie = await Movie.findByIdAndUpdate(id, updateData, {
       new: true,
+      runValidators: true,
     });
 
     if (!movie) {
@@ -126,6 +146,7 @@ let updateMovie = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
+
 
 let deleteMovie = async (req, res) => {
   try {
@@ -249,6 +270,8 @@ let getgenre = async (req, res) => {
   }
 };
 
+
+
  
 module.exports = {
   createMovie,
@@ -259,5 +282,6 @@ module.exports = {
   FilterMovie,
 filterMovieQuery,
 getlang,
-getgenre
+getgenre,
+
 };

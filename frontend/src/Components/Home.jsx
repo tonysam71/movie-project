@@ -40,8 +40,8 @@ export default function Home() {
       {/* HERO SLIDER */}
       <div className="w-full mt-[60px] md:mt-[79px] py-8 md:py-12 px-4 sm:px-6 md:px-16">
         <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
-          navigation
+          modules={[ Pagination, Autoplay]}
+        
           pagination={{ clickable: true }}
           autoplay={{ delay: 5000 }}
           loop={movies.length > 1}
@@ -49,7 +49,7 @@ export default function Home() {
         >
           {movies.map((movie) => (
             <SwiperSlide key={movie._id}>
-              <Link to={"movie/" + movie.name}>
+               <Link to={`/movie/${movie.slug}`}>
                 <div className="relative min-h-[420px] sm:min-h-[450px] md:min-h-[500px] rounded-2xl overflow-hidden">
                   
                   {/* BLUR BACKGROUND */}

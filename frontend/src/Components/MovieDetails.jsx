@@ -6,6 +6,8 @@ import Gen from "./Genre";
 
 export default function MovieDetails() {
   const { name } = useParams();
+  const { slug } = useParams();
+  console.log(slug);
 
   const [movie, setMovie] = useState(null);
   const [shows, setShows] = useState([]);
@@ -14,9 +16,8 @@ export default function MovieDetails() {
 
   const getMovie = async () => {
     try {
-      const res = await fetch(
-        `/api/movie/getmovie/${encodeURIComponent(name)}`
-      );
+      const res = await fetch(`/api/movie/${slug}`);
+
       const data = await res.json();
 
       if (data.success) {
@@ -51,9 +52,7 @@ export default function MovieDetails() {
 
   if (movie === false) {
     return (
-      <h2 className="text-center text-2xl font-bold py-20">
-        Movie Not Found!
-      </h2>
+      <h2 className="text-center text-2xl font-bold py-20">Movie Not Found!</h2>
     );
   }
 
@@ -86,9 +85,7 @@ export default function MovieDetails() {
           />
 
           <div className="text-center md:text-left">
-            <h1 className="text-xl md:text-2xl font-bold mb-2">
-              {movie.name}
-            </h1>
+            <h1 className="text-xl md:text-2xl font-bold mb-2">{movie.name}</h1>
 
             <p className="text-gray-500 text-sm md:text-base">
               {(movie.language || []).join(", ")} | {movie.duration}
@@ -126,9 +123,7 @@ export default function MovieDetails() {
         </div>
 
         {Object.keys(groupedShows).length === 0 && (
-          <p className="text-center text-gray-500 py-10">
-            No shows available
-          </p>
+          <p className="text-center text-gray-500 py-10">No shows available</p>
         )}
 
         {Object.values(groupedShows).map(({ theatre, shows }) => (
@@ -138,7 +133,7 @@ export default function MovieDetails() {
           >
             <div className="flex gap-4">
               <img
-                src={theatre.logo || ""}
+                src={theatre.image.url || ""}
                 className="w-10 h-10 md:w-12 md:h-12 rounded-full border"
               />
 
@@ -170,7 +165,7 @@ export default function MovieDetails() {
                           month: "short",
                         })}
                       </button>
-                    ))
+                    )),
                   )}
                 </div>
 
@@ -193,40 +188,41 @@ export default function MovieDetails() {
                             })}
                           </p>
 
-                          {/* Hover popup (desktop only) */}
-                          <div
-                            className="absolute  group-hover:block
-                                       top-[-130px] left-1/2 -translate-x-1/2
-                                       bg-white rounded-xl shadow-xl p-3
-                                       z-50 min-w-[180px]
-                                        md:block"
-                          >
-                            {t.seatCategories.map((seat, idx) => (
-                              <div
-                                key={idx}
-                                className="flex justify-between mb-2"
-                              >
-                                <div>
-                                  <p className="text-sm">
-                                    {seat.categoryName}
-                                  </p>
-                                  <p className="text-xs text-green-600">
-                                    AVAILABLE
-                                  </p>
-                                </div>
-                                <p className="font-semibold">
-                                  ₹{seat.price}
-                                </p>
-                              </div>
-                            ))}
+                          <div className="relative group">
+                            {/* Hover target (time / button / text) */}
 
                             <div
-                              className="absolute -bottom-2 left-1/2 -translate-x-1/2
-                                         w-3 h-3 bg-white rotate-45"
-                            ></div>
+                              className="absolute hidden group-hover:block
+               top-[-130px] left-1/2 -translate-x-1/2
+               bg-white rounded-xl shadow-xl p-3
+               z-50 min-w-[180px]"
+                            >
+                              {t.seatCategories.map((seat, idx) => (
+                                <div
+                                  key={idx}
+                                  className="flex justify-between mb-2"
+                                >
+                                  <div>
+                                    <p className="text-sm">
+                                      {seat.categoryName}
+                                    </p>
+                                    <p className="text-xs text-green-600">
+                                      AVAILABLE
+                                    </p>
+                                  </div>
+                                  <p className="font-semibold">₹{seat.price}</p>
+                                </div>
+                              ))}
+
+                              {/* arrow */}
+                              <div
+                                className="absolute -bottom-2 left-1/2 -translate-x-1/2
+                 w-3 h-3 bg-white rotate-45"
+                              />
+                            </div>
                           </div>
                         </button>
-                      ))
+                      )),
                     )}
                   </div>
                 )}
@@ -238,13 +234,10 @@ export default function MovieDetails() {
             </div>
           </div>
         ))}
+      </div>
 
-       
-        </div>
-
-        <Languages />
-              <Gen/>
-      
+      <Languages />
+      <Gen />
     </>
   );
 }

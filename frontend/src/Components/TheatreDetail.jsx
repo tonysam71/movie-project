@@ -44,19 +44,19 @@ export default function TheatreDetail() {
         return;
       }
 
-      // ✅ only valid shows
+     
       const validShows = (data.data || []).filter((s) => s.movie && s.theatre);
 
       setShows(validShows);
 
-      // ✅ THEATRE INFO (FIXED)
+   
       const theatreObj = validShows.find((s) => typeof s.theatre === "object");
 
       if (theatreObj) {
         setTheatreInfo(theatreObj.theatre);
       }
 
-      // ✅ DATE LIST
+    
       const dates = Array.from(
         new Set(
           validShows.flatMap((s) =>
@@ -77,7 +77,6 @@ export default function TheatreDetail() {
     }
   };
 
-  // ✅ group by movie
   const moviesGrouped = shows.reduce((acc, s) => {
     const mid = s.movie._id;
     if (!acc[mid]) acc[mid] = { movie: s.movie, shows: [] };

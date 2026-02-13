@@ -45,8 +45,7 @@ export default function ProfileModal({ show, onClose, setUser }) {
 
     const res = await axios.get(`${BASE_URL}/profile`, {
       headers: { token },
-      // best practice:
-      // headers: { Authorization: `Bearer ${token}` },
+      
     });
 
     if (res.data.success) {

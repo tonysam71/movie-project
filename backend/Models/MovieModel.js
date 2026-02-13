@@ -1,20 +1,45 @@
 const mongoose = require("mongoose");
 
+
+const slugify = (text) => {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/\s+/g, "-");
+};
+
+
 const movieSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    releaseDate: { type: Date },
-    duration: { type: String },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
-    genre: [String],        // action, biography etc
-    language: [String],     // English, Hindi
+    slug: {
+      type: String,
+      unique: true,
+      lowercase: true,
+      index: true,
+    },
+
+    releaseDate: Date,
+    duration: String,
+    genre: [String],
+    language: [String],
 
     category: {
       type: String,
-      enum: ["now", "upcoming"], // section
+      enum: ["now", "upcoming"],
     },
 
-    isReleased: { type: Boolean, default: false },
+    isReleased: {
+      type: Boolean,
+      default: false,
+    },
+
     castNames: [String],
     description: String,
 
@@ -28,5 +53,13 @@ const movieSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+
+movieSchema.pre("save", async function () {
+  if (this.isModified("name")) {
+    this.slug = slugify(this.name);
+  }
+});
+
 
 module.exports = mongoose.model("movies", movieSchema);

@@ -80,7 +80,8 @@ export default function MovieSection({ section, title, filter }) {
               key={movie._id}
               className="bg-white rounded-xl shadow hover:shadow-lg transition"
             >
-              <Link to={`/movie/${encodeURIComponent(movie.name)}`}>
+             <Link to={`/movie/${movie.slug}`}>
+
                 <div className="w-full overflow-hidden rounded-t-xl relative">
                   <img
                     src={movie.poster?.url}

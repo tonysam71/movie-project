@@ -1,37 +1,64 @@
+const { ObjectId } = require("mongodb");
 const MovieUser = require("../Models/movieuserModel");
 const { decodetoken } = require("../utils/token");
+let Admin = require("../models/AdminModel")
 
-let auth = async (req, res, next) => {
+
+let authAdmin = async (req, res, next) => {
   try {
-    let token = req.headers.token;
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         success: false,
-        message: "Token required"
+        message: "Token required",
       });
     }
 
-    let decoded = await decodetoken(token, process.env.SECRETKEY);
+    const token = authHeader.split(" ")[1];
 
-    let user = await MovieUser.findById(decoded.userid)
-      .select("name email mobileNumber");
+    const decodedvalue = await decodetoken(
+      token,
+      process.env.SECRETKEY
+    );
 
-    if (!user) {
+    console.log("Decoded:", decodedvalue);
+
+    const admin = await Admin.findById(decodedvalue.adminId);
+
+    if (!admin) {
       return res.status(401).json({
         success: false,
-        message: "Invalid token"
+        message: "Invalid token",
       });
     }
 
-    req.user = user;
+    req.admin = admin;
     next();
+
   } catch (error) {
-    res.status(401).json({
+    console.log("AuthAdmin Error:", error);
+    return res.status(401).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
-
-module.exports = { auth };
+let auth = async (req, res, next) => {
+    try {
+        let token = req.headers.token || null;
+        // let token = req.headers.authorization.split(" ")[1] || null
+ 
+        if (!token) {
+            return res.status(500).json({ success: false, message: "Please provide token" })
+        }
+        let decodedvalue = await decodetoken(token, process.env.SECRETKEY);
+        let user = await MovieUser.findOne({ "_id": new ObjectId(decodedvalue.userid) })
+        req.user = user;
+        next()
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message })
+    }
+}
+ 
+module.exports = { auth,authAdmin};
