@@ -1,7 +1,7 @@
 const { ObjectId } = require("mongodb");
 const MovieUser = require("../Models/movieuserModel");
 const { decodetoken } = require("../utils/token");
-let Admin = require("../models/AdminModel")
+let Admin = require("../Models/AdminModel")
 
 
 let authAdmin = async (req, res, next) => {
