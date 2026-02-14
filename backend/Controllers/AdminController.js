@@ -1,6 +1,6 @@
 const { hashpassword, comparepassword } = require("../utils/hash");
 const { generatetoken } = require("../utils/token");
-const Admin = require("../models/AdminModel");
+const Admin = require("../Models/AdminModel");
 
 
 // ================= REGISTER =================
