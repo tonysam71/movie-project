@@ -23,6 +23,7 @@ app.use("/api/theatre", require("./Routes/TheatreRoute"));
 app.use("/api/showmovie", require("./Routes/showRoute"));
 app.use("/api/admin", require("./Routes/AdminRoute"));
 
+
 const frontendPath = path.join(__dirname, "../frontend/dist");
 
 app.use(express.static(frontendPath));

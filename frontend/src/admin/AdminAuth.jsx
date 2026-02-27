@@ -45,13 +45,13 @@ export default function AdminAuth() {
           {mode === "login" ? "Login" : "Register"}
         </h2>
 
-        {mode === "register" && (
+        {/* {mode === "register" && (
           <input
             className="border p-2 mb-2 w-full"
             placeholder="Name"
             onChange={(e) => setName(e.target.value)}
           />
-        )}
+        )} */}
 
         <input
           className="border p-2 mb-2 w-full"
@@ -76,7 +76,7 @@ export default function AdminAuth() {
             setMode(mode === "login" ? "register" : "login")
           }
         >
-          Switch to {mode === "login" ? "Register" : "Login"}
+        
         </p>
       </form>
     </div>

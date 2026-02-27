@@ -55,6 +55,20 @@ export default function Sidebar() {
           Create Show
         </NavLink>
       </nav>
+       <div className="shadow p-4 flex items-center">
+    
+
+          <button
+            onClick={() => {
+              localStorage.removeItem("adminToken");
+              window.location.href = "/loginadmin";
+            }}
+            className="bg-red-500 text-white px-4 py-2 rounded"
+          >
+            Logout
+          </button>
+        </div>
+
     </div>
   );
 }

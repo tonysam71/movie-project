@@ -9,6 +9,8 @@ const {
   filterMovieQuery,
   getlang,
   getgenre,
+  getSingleMovie,
+  searchMovies,
  
 } = require("../Controllers/MovieController");
 const upload = require("../Middleware/Upload");
@@ -17,6 +19,11 @@ router.post("/createmovie", upload.single("poster"), createMovie);
 
 
 router.get("/getmovies", getMovies);
+router.get("/getMovie/:id", getSingleMovie);
+router.get("/search",searchMovies);
+
+
+
 
 
 

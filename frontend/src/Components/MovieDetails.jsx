@@ -3,11 +3,12 @@ import { useParams } from "react-router-dom";
 import VeiwDetailsModal from "./ViewDetailsModal";
 import Languages from "./Languages";
 import Gen from "./Genre";
+import ViewDetailsModal from "./ViewDetailsModal";
 
 export default function MovieDetails() {
-  const { name } = useParams();
+ 
   const { slug } = useParams();
-  console.log(slug);
+
 
   const [movie, setMovie] = useState(null);
   const [shows, setShows] = useState([]);
@@ -42,9 +43,12 @@ export default function MovieDetails() {
   };
 
   useEffect(() => {
+  if (slug) {
     getMovie();
     window.scrollTo(0, 0);
-  }, [name]);
+  }
+}, [slug]);
+
 
   if (movie === null) {
     return <h2 className="text-center text-2xl font-bold py-20">Loading...</h2>;
@@ -98,12 +102,13 @@ export default function MovieDetails() {
               View details
             </button>
 
-            {open && (
-              <VeiwDetailsModal
-                movieName={movie.name}
-                onClose={() => setOpen(false)}
-              />
-            )}
+           {open && (
+  <ViewDetailsModal
+    slug={slug}       
+    onClose={() => setOpen(false)}
+  />
+)}
+
 
             <br />
 

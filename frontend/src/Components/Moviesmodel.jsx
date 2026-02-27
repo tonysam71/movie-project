@@ -5,6 +5,7 @@ export default function Moviesmodel({ show, onClose }) {
   const [animate, setAnimate] = useState(false);
   const [movies, setMovies] = useState([]);
 
+  // FETCH MOVIES
   const getdata = async () => {
     try {
       const res = await fetch("/api/movie/getmovies?category=now");
@@ -20,10 +21,12 @@ export default function Moviesmodel({ show, onClose }) {
     }
   };
 
+  // LOAD DATA WHEN MODAL OPENS
   useEffect(() => {
     if (show) getdata();
   }, [show]);
 
+  // ANIMATION
   useEffect(() => {
     if (show) {
       setTimeout(() => setAnimate(true), 10);
@@ -81,7 +84,7 @@ export default function Moviesmodel({ show, onClose }) {
           {movies.map((movie) => (
             <Link
               key={movie._id}
-              to={`/movie/${encodeURIComponent(movie.name)}`}
+              to={`/movie/${movie.slug}`}   
               onClick={onClose}
             >
               <div
@@ -90,7 +93,9 @@ export default function Moviesmodel({ show, onClose }) {
                 transition cursor-pointer"
               >
                 <img
-                  src={movie.poster?.url}
+                  src={
+                    movie.poster?.url || movie.poster || "/placeholder.jpg"
+                  }  
                   alt={movie.name}
                   className="w-12 h-12 sm:w-14 sm:h-14
                   rounded-lg object-cover"
@@ -100,9 +105,11 @@ export default function Moviesmodel({ show, onClose }) {
                   <h3 className="font-semibold text-sm sm:text-base truncate">
                     {movie.name}
                   </h3>
+
                   <p className="text-xs sm:text-sm text-gray-500">
-                    
-                    {(movie.langauge || []).join(", ")}
+                    {Array.isArray(movie.language)
+                      ? movie.language.join(", ")
+                      : movie.language || ""}
                   </p>
                 </div>
               </div>

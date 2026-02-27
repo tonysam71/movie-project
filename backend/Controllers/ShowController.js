@@ -2,14 +2,23 @@ const Show = require("../Models/ShowModel_temp");
 const Theatre = require("../Models/theatreModel_temp");
 let {ObjectId} = require("mongodb")
 exports.createShow = async (req, res) => {
-    try {
-        let newShow = await Show({ ...req.body });
-        newShow.save()
-        res.status(200).json({ success: true, data: newShow })
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message })
-    }
-}
+  try {
+    const newShow = new Show({ ...req.body });
+    await newShow.save();
+
+    res.status(200).json({
+      success: true,
+      data: newShow,
+    });
+  } catch (error) {
+    console.log(error); // 🔥 add this
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 exports.getShows = async (req, res) => {
     try {
         let { movieId } = req.params;

@@ -1,127 +1,87 @@
+const Admin = require("../Models/AdminModel");
+const Movie = require("../Models/MovieModel");
+const Theatre = require("../Models/theatreModel_temp");
+const Show = require("../Models/ShowModel_temp");
+
 const { hashpassword, comparepassword } = require("../utils/hash");
 const { generatetoken } = require("../utils/token");
-const Admin = require("../Models/AdminModel");
-
 
 // ================= REGISTER =================
-let register = async (req, res) => {
+exports.register = async (req, res) => {
   try {
-    let { name, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Please provide all details",
-      });
+      return res.status(400).json({ success: false, message: "All fields required" });
     }
 
-    let existingAdmin = await Admin.findOne({ email });
+    const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
-      return res.status(409).json({
-        success: false,
-        message: "Admin already exists",
-      });
+      return res.status(409).json({ success: false, message: "Admin already exists" });
     }
 
-    let hashed = await hashpassword(password);
+    const hashed = await hashpassword(password);
 
-    let newAdmin = await Admin.create({
-      name,
-      email,
-      password: hashed,
-    });
+    await Admin.create({ name, email, password: hashed });
 
-    res.status(201).json({
-      success: true,
-      message: "Admin registered successfully",
-    });
-
+    res.status(201).json({ success: true, message: "Admin registered" });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-
 // ================= LOGIN =================
-let login = async (req, res) => {
+exports.login = async (req, res) => {
   try {
-    let { email, password } = req.body;
+    const { email, password } = req.body;
 
-    let admin = await Admin.findOne({ email });
-
+    const admin = await Admin.findOne({ email });
     if (!admin) {
-      return res.status(404).json({
-        success: false,
-        message: "Admin not found",
-      });
+      return res.status(404).json({ success: false, message: "Admin not found" });
     }
 
-    let ismatch = await comparepassword(password, admin.password);
-
-    if (!ismatch) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid credentials",
-      });
+    const isMatch = await comparepassword(password, admin.password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
-    let token = await generatetoken(
+    const token = await generatetoken(
       { adminId: admin._id },
       process.env.SECRETKEY,
       "1d"
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Login successfully",
-      token,
-    });
-
+    res.status(200).json({ success: true, token });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 // ================= PROFILE =================
-let profile = (req, res) => {
+exports.profile = (req, res) => {
+  res.status(200).json({ success: true, data: req.admin });
+};
+
+// ================= LOGOUT =================
+exports.logout = (req, res) => {
+  res.status(200).json({ success: true, message: "Logout successful" });
+};
+
+// ================= DASHBOARD STATS =================
+exports.dashboardStats = async (req, res) => {
   try {
-    if (!req.admin) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
-    }
+    const movies = await Movie.countDocuments();
+    const theatres = await Theatre.countDocuments();
+    const shows = await Show.countDocuments();
 
     res.status(200).json({
       success: true,
-      data: req.admin,
+      movies,
+      theatres,
+      shows,
     });
-
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    console.error("Dashboard Stats Error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
-
-// ================= LOGOUT =================
-let logout = (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Logout successful",
-  });
-};
-
-
-module.exports = { register, login, profile, logout };
