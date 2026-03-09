@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import VeiwDetailsModal from "./ViewDetailsModal";
 import Languages from "./Languages";
 import Gen from "./Genre";
@@ -8,6 +8,8 @@ import ViewDetailsModal from "./ViewDetailsModal";
 export default function MovieDetails() {
  
   const { slug } = useParams();
+  const navigate = useNavigate();
+ 
 
 
   const [movie, setMovie] = useState(null);
@@ -179,13 +181,24 @@ export default function MovieDetails() {
                   <div className="flex gap-2 md:gap-4 mt-4 flex-wrap">
                     {shows.map((show) =>
                       show.showTimings.map((t, i) => (
-                        <button
-                          key={i}
-                          className="relative group border rounded-lg
-                                     px-4 md:px-6 py-2 md:py-3
-                                     text-sm md:text-base
-                                     hover:border-green-500"
-                        >
+                      <button
+  key={i}
+  onClick={() => {
+    const formattedDate = new Date(selectedDate)
+      .toISOString()
+      .split("T")[0];
+
+    const formattedTime = new Date(t.time).toISOString();
+
+    navigate(
+      `/seats/${show._id}/${formattedDate}/${formattedTime}`
+    );
+  }}
+  className="relative group border rounded-lg
+             px-4 md:px-6 py-2 md:py-3
+             text-sm md:text-base
+             hover:border-green-500"
+>
                           <p className="font-semibold">
                             {new Date(t.time).toLocaleTimeString("en-IN", {
                               hour: "2-digit",

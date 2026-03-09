@@ -22,6 +22,7 @@ import AllMovies from "./admin/AllMovies";
 import CreateShow from "./admin/CreateShow";
 
 import './App.css'
+import SeatLayout from "./Components/Seatlayout";
 
 function App() {
   const location = useLocation();
@@ -37,6 +38,7 @@ function App() {
         <Route path="/movie/:slug" element={<MovieDetails />} />
         <Route path="/theatre/:id" element={<TheatreDetail />} />
         <Route path="/movies/list/:type/:value" element={<Moviecard />} />
+        <Route path="/seats/:showId/:date/:time" element={<SeatLayout />} />
 
         {/* admin auth */}
         <Route path="/loginadmin" element={<AdminAuth />} />

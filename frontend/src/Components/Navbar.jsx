@@ -43,7 +43,9 @@ export default function Navbar() {
       setUser(null);
     }
   };
-
+useEffect(() => {
+  window.openLoginModal = () => setOpen(true);
+}, []);
   return (
     <>
       {/* HEADER */}
